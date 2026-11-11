@@ -371,10 +371,7 @@
           </div>
           <div style="background:#12151a;border:1px solid #232933;border-radius:14px;overflow:hidden;display:flex;flex-direction:column">
             <div style="position:relative;height:210px;border-bottom:1px solid #1c222b;background:#0a0c0f">
-              <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;text-align:center;padding:0 20px">
-                <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.3em;color:#e4b33c;text-transform:uppercase;font-weight:500">Coming soon</div>
-                <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:0.05em;color:#5b6570">Eigen Scope capture</div>
-              </div>
+              <img src="rossler.png" alt="Eigen Scope capture — Rössler spiral, live" style="width:100%;height:100%;object-fit:contain;display:block;background:#0a0c0f">
             </div>
             <div style="padding:26px 28px 30px;display:flex;flex-direction:column;gap:10px;flex:1">
               <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.2em;color:#e4b33c">CHAOS &amp; DYNAMICS</div>
@@ -438,12 +435,14 @@
       <div style="max-width:1180px;margin:0 auto;padding:100px 32px">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
           <sc-for list="{{ synthFeatures }}" as="f" hint-placeholder-count="6">
-            <div style="background:#12151a;border:1px solid #232933;border-radius:14px;padding:32px;display:flex;flex-direction:column">
-              <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.18em;color:#45c4f0">{{ f.tag }}</div>
-              <div style="font-weight:800;font-size:22px;color:#f2f4f6;margin-top:12px">{{ f.title }}</div>
-              <p style="font-size:15.5px;line-height:1.7;color:#9aa3ad;margin:12px 0 0">{{ f.body }}</p>
+            <div style="{{ f.cardStyle }}">
+              <div style="{{ f.textStyle }}">
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.18em;color:#45c4f0">{{ f.tag }}</div>
+                <div style="font-weight:800;font-size:22px;color:#f2f4f6;margin-top:12px">{{ f.title }}</div>
+                <p style="font-size:15.5px;line-height:1.7;color:#9aa3ad;margin:12px 0 0">{{ f.body }}</p>
+              </div>
               <sc-if value="{{ f.img }}" hint-placeholder-val="{{ false }}">
-                <div style="margin-top:auto;padding-top:24px">
+                <div style="{{ f.imgWrapStyle }}">
                   <img src="{{ f.img }}" alt="{{ f.imgAlt }}" loading="lazy" style="display:block;width:100%;height:auto;border:1px solid #232933;border-radius:10px;background:#0d0f13">
                 </div>
               </sc-if>
@@ -1085,6 +1084,22 @@ class Component extends DCLogic {
       flexDirection: 'column'
     });
 
+    // Tarjetas de funciones del synth: normal = media columna con la imagen al pie;
+    // wide = fila completa, texto a la izquierda e imagen a su tamaño a la derecha.
+    const featureCards = (list) => list.map(f => {
+      const wide = !!f.wide;
+      return Object.assign({}, f, {
+        cardStyle: {
+          background: '#12151a', border: '1px solid #232933', borderRadius: 14, padding: 32,
+          display: 'flex', flexDirection: wide ? 'row' : 'column',
+          alignItems: wide ? 'center' : 'stretch', gap: wide ? 44 : 0,
+          gridColumn: wide ? '1 / -1' : 'auto'
+        },
+        textStyle: wide ? { flex: '1 1 0', minWidth: 0 } : {},
+        imgWrapStyle: wide ? { flex: '0 0 auto', width: '46%', maxWidth: 504 } : { marginTop: 'auto', paddingTop: 24 }
+      });
+    });
+
     const ART = {
       synth: { src: 'Adelicaudio%20synth.png', alt: 'Adelicaudio Synth' },
       verb: { src: 'Primes.png', alt: 'Primes' },
@@ -1167,16 +1182,16 @@ class Component extends DCLogic {
         { name: 'Fractal & Quantum', num: 'FAMILY 06 · 07', desc: 'Fractal subband structures and quantum wave packets — beating, breathing spectra with self-similar detail at every zoom.', examples: 'Harper (Hofstadter) · Quantum-Haar · Chebyshev Quantum · Gross-Pitaevskii' }
       ],
 
-      synthFeatures: [
+      synthFeatures: featureCards([
         { tag: 'ULTRAMETRIC SYNTHESIS', title: 'The engine at the core', body: 'The heart of the synth. Every note is a set of resonances \u2014 pitch, decay and weight for each mode \u2014 read from a p-adic operator and evaluated exactly, with nothing integrated and no free-running oscillators. A single byte steers the timbre through 256 directions.' },
         { tag: 'LAYER A+B', title: 'Dual-engine voices', body: 'Any two engines fused inside one voice, with equal-power mix, detune and octave offset, spectral carve, rhythmic ducking and a two-stage attack. A layering depth that stacking two plugin instances cannot reach.' },
         { tag: 'EIGEN MOD', title: 'Modulation built on the same math', body: 'A 16-route matrix fed by four drawable Shapers on a p-adic grid, a Chaos generator running the same attractors as our engines \u2014 Lorenz, R\u00f6ssler, Kuramoto and more \u2014 four Drift outputs whose randomness moves together branch by branch, two envelopes, eight macros and full MIDI and MPE expression. Route them to the filters, amp, pan, a trance gate, the timbre itself and the hidden knobs of each engine.', img: 'Mod%20synth.png', imgAlt: 'The MOD tab: a Shaper in draw mode, eight macros and the 16-route EIGEN MOD matrix' },
         { tag: 'FX CHAIN', title: 'Effects grown from the same math', body: 'A master chain built from the same mathematics as the engines — Chebyshev distortion, a p-adic wavefolder and bitcrusher, quantum beats — with built-in versions of Ramify and Kindred, and a resonance tamer guarding the output.', img: 'Fx%20synth.png', imgAlt: 'The FX tab: Ramify, Kindred, Chebyshev Dist, Wavefolder, Bitcrush and Quantum Beats' },
-        { tag: 'EIGEN ORBIT', title: 'Generative sequencer & arpeggiator', body: 'Classic arp modes plus a generative mode that walks the system\u2019s gravity field, braiding voice-leading as lines cross. EVO evolves live and never repeats exactly; FRZ captures a walk as an editable 64-step loop you can regenerate endlessly.' },
+        { tag: 'EIGEN ORBIT', title: 'Generative sequencer & arpeggiator', body: 'Classic arp modes plus a generative mode that walks the system\u2019s gravity field, braiding voice-leading as lines cross. EVO evolves live and never repeats exactly; FRZ captures a walk as an editable 64-step loop you can regenerate endlessly.', wide: true, img: 'orbit.png', imgAlt: 'Eigen Scope, Orbit view: EVO mode walking a 16-step loop across the voices' },
         { tag: 'EIGEN FILTER', title: 'Dual multimode filter per voice', body: 'Two filters, blendable from series to parallel, with exotic types alongside the classics: Comb, Formant and Fractional — plus per-type \u201cfourth dimension\u201d control, drive, key-tracking and dedicated envelope depth.' },
         { tag: 'STABILITY', title: 'Product-grade DSP safety', body: 'Per-voice signal sanitizing, DC blocking, stability clamps on every dynamical engine, and a final safety limiter. Every engine is live mathematics, and none of them can ever blow up your master bus.' },
-        { tag: 'LICENSING', title: 'Online first time - then offline works forever', body: '' }
-      ],
+        { tag: 'LICENSING', title: 'Online first time - then offline works forever', body: '', wide: true }
+      ]),
 
       synthSpecs: [
         { label: 'Format', value: 'VST3 + Standalone' },
