@@ -182,7 +182,7 @@
           <div style="padding:26px 28px 28px;display:flex;flex-direction:column;gap:10px;flex:1">
             <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.2em;color:#e4b33c">ALGORITHMIC REVERB</div>
             <div style="font-weight:800;font-size:24px;color:#f2f4f6">Ramify</div>
-            <p style="font-size:15px;line-height:1.6;color:#9aa3ad;margin:0;flex:1">The room, alive. Delay lines standing on a mathematical tree, mixed by an orthogonal rotation of the tree itself — it morphs in real time, tells the truth about its decay, and can freeze forever.</p>
+            <p style="font-size:15px;line-height:1.6;color:#9aa3ad;margin:0;flex:1">The room, alive. Delay lines standing on a mathematical tree, mixed by an orthogonal rotation of the tree itself — it morphs in real time, opens into two decay slopes, and can freeze forever.</p>
             <div style="font-weight:700;font-size:15px;color:#e8eaed;margin-top:6px"><span style="color:#e4b33c">→</span></div>
           </div>
         </div>
@@ -1218,7 +1218,7 @@ class Component extends DCLogic {
 
       treePoints: [
         { k: 'Orthogonal by construction', v: 'the diffusion knob never changes the length of the tail — energy is conserved exactly at any setting.' },
-        { k: 'Honest T60', v: 'set the knob to 2.0 s, measure a ~2.0 s tail. The number and the room agree.' },
+        { k: 'Two decay slopes', v: 'close COUPLING and the tail falls in two stages — a quick early drop with a long bloom underneath, like two rooms sharing one sound.' },
         { k: 'A tail that breathes', v: 'MOTION gives the room a slow drift that never lines up with itself — density, not wobble. The pitch stays put.' },
         { k: 'Infinite Freeze', v: 'exact conservation — not a loop, not a sample. Measured: \u22120.1 dB over 2 s.' },
         { k: 'True stereo', v: 'wide by mathematics, mono-safe by mathematics.' }
@@ -1226,7 +1226,7 @@ class Component extends DCLogic {
 
       treeClaims: [
         { tag: 'ORTHOGONAL MIX', title: 'Diffusion never touches the decay', body: 'The mixing matrix is orthogonal by construction — a genuine rotation of the network, not a gain trick — so energy is conserved exactly at any setting. Diffusion morphs the texture from metallic parallel combs to a dense cloud without ever changing how long the tail lasts.', figure: 'measured tail variation across the full Diffusion range: 2\u20133%' },
-        { tag: 'HONEST T60', title: 'A room that tells the truth', body: 'Per-line decay is solved for the T60 you ask for: set ROOM to 2.0 s and the measured tail is ~2.0 s. Most algorithmic reverbs cannot promise this — the printed number and the real number are usually strangers.', figure: 'measured T60 error: 2\u20136%' },
+        { tag: 'SIZE', title: 'Room size and tail length, apart', body: 'SIZE scales the whole geometry at once \u2014 from a three-metre booth to a twenty-four-metre hall, with the density following it the way it does in a real room \u2014 while ROOM keeps the length of the tail. Big and short, small and endless: the two never pull on each other.', figure: 'first reflection: 5.9 \u2192 47 ms' },
         { tag: 'COUPLING', title: 'One room, two decay slopes', body: 'Close COUPLING and the branches of the tree stop sharing energy: each family decays at its own rate, so the tail arrives in two slopes \u2014 a quicker early fall with a longer one running underneath. Open it and the network returns to a single unified decay. It changes the shape of the decay without touching the time you set on ROOM.', figure: 'the shape of the decay \u2014 never its length' },
         { tag: 'MOTION', title: 'Movement without detuning', body: 'Every delay line drifts at its own slow rate, and the phases are spaced by the golden ratio \u2014 so no two lines ever come into step, and a line\u2019s phase is never tied to its speed. The tail thickens and stops sounding static, without the audible wobble that usually comes with a modulated reverb. The depth ceiling is not a matter of taste: it is fixed at the point where the echo density saturates, which keeps the entire travel of the knob near a single cent. Take MOTION to zero and the engine is bit-identical to a still room; press FREEZE and the movement stops with it.', figure: 'at full MOTION: 1.04 cents of drift \u00b7 echo density +87%' },
         { tag: 'FREEZE', title: 'Mathematically infinite freeze', body: 'On freeze, the per-line gains go to 1 and the orthogonal matrix holds the energy — without growing, without dying. It is not a loop and not a sample: it is the system in exact conservation. Hold a room forever.', figure: 'measured drift: \u22120.1 dB over 2 s' },
@@ -1236,7 +1236,7 @@ class Component extends DCLogic {
       ],
 
       treeControls: [
-        { name: 'ROOM', range: '0.3\u201312 s', desc: 'The real T60 of the tail. What you set is what you measure. ROOM says how long the room lasts; SIZE says how big it is.' },
+        { name: 'ROOM', range: '0.3\u201312 s', desc: 'How long the tail lasts, in seconds. ROOM says how long the room lasts; SIZE says how big it is.' },
         { name: 'SIZE', range: '0.25\u20132\u00d7', desc: 'The size of the room itself, not the length of its tail. It scales the whole geometry at once, so the first reflection travels from 5.9 ms to 47 ms \u2014 a three-metre booth to a twenty-four-metre hall \u2014 and the density follows it, the way it does when a real room changes size. At 1.00 the engine is bit-identical to the room this plugin has always had.' },
         { name: 'PRE-DELAY', range: '0\u2013500 ms', desc: 'The gap between the source and the room \u2014 the control that sets perceived distance. Fine resolution where you actually work: the first 60 ms.' },
         { name: 'DIFFUSION', range: '0\u20131', desc: 'From metallic parallel combs to a dense cloud — a rotation of the tree you can turn live, without changing the tail length.' },
